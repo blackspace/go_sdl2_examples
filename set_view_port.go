@@ -2,9 +2,13 @@ package main
 
 import (
 	"github.com/veandco/go-sdl2/sdl"
+	"os"
+	"log"
+	"reflect"
 )
 
-func main() {
+
+func run() int {
 	sdl.Init(sdl.INIT_EVERYTHING)
 
 	const W=800
@@ -24,28 +28,35 @@ func main() {
 	renderer, err := sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
 	if err != nil {
 		panic(err)
-		return
+		return 1
 	}
 	defer renderer.Destroy()
 
 	renderer.SetDrawColor(0, 0, 0, 255)
 	renderer.Clear()
 
-	for i:=int32(0);i<700;i++ {
-		if i>0 {
-			rect := sdl.Rect{i-1, 0, 10, 10}
-			renderer.SetDrawColor(0, 0, 0, 255)
-			renderer.FillRect(&rect)
-		}
+	renderer.SetViewport(&sdl.Rect{100,100,200,200})
+	renderer.SetDrawColor(0,100,0,255)
+	renderer.DrawLine(0,0,400,400)
+	renderer.Present()
 
-		rect := sdl.Rect{i, 0, 10, 10}
-		renderer.SetDrawColor(0, 255, 255, 255)
-		renderer.FillRect(&rect)
-		renderer.Present()
+	L:
+	for {
+		event:=sdl.WaitEvent()
+		log.Printf("%v",reflect.ValueOf(event).Type())
+		switch event.(type) {
+		case *sdl.QuitEvent:
+			break L
+		}
 	}
 
 
-
-	sdl.Delay(2000)
-
+	return 0
 }
+
+func main() {
+	os.Exit(run())
+}
+
+
+

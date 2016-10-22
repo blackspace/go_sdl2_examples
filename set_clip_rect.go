@@ -31,18 +31,12 @@ func main() {
 	renderer.SetDrawColor(0, 0, 0, 255)
 	renderer.Clear()
 
-	for i:=int32(0);i<700;i++ {
-		if i>0 {
-			rect := sdl.Rect{i-1, 0, 10, 10}
-			renderer.SetDrawColor(0, 0, 0, 255)
-			renderer.FillRect(&rect)
-		}
+	renderer.SetClipRect(&sdl.Rect{100,100,200,200})
 
-		rect := sdl.Rect{i, 0, 10, 10}
-		renderer.SetDrawColor(0, 255, 255, 255)
-		renderer.FillRect(&rect)
-		renderer.Present()
-	}
+	renderer.SetDrawColor(255,255,255,255)
+	renderer.FillRect(&sdl.Rect{0,0,500,500})
+
+	renderer.Present()
 
 
 

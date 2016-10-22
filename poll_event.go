@@ -2,9 +2,14 @@ package main
 
 import (
 	"github.com/veandco/go-sdl2/sdl"
+	"os"
+	"fmt"
+	"log"
+	"reflect"
 )
 
-func main() {
+
+func run() int {
 	sdl.Init(sdl.INIT_EVERYTHING)
 
 	const W=800
@@ -24,28 +29,42 @@ func main() {
 	renderer, err := sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
 	if err != nil {
 		panic(err)
-		return
+		return -1
 	}
 	defer renderer.Destroy()
 
 	renderer.SetDrawColor(0, 0, 0, 255)
 	renderer.Clear()
 
-	for i:=int32(0);i<700;i++ {
-		if i>0 {
-			rect := sdl.Rect{i-1, 0, 10, 10}
-			renderer.SetDrawColor(0, 0, 0, 255)
-			renderer.FillRect(&rect)
+	renderer.Present()
+
+	L:
+	for {
+		event := sdl.PollEvent()
+		if event==nil {
+			continue
+		}
+		switch t:=event.(type) {
+		case *sdl.QuitEvent:
+			break L
+		case *sdl.KeyUpEvent:
+			fmt.Printf("[%d ms] Keyboard\ttype:%d\tsym:%c\tmodifiers:%d\tstate:%d\trepeat:%d\n",
+				t.Timestamp, t.Type, t.Keysym.Sym, t.Keysym.Mod, t.State, t.Repeat)
 		}
 
-		rect := sdl.Rect{i, 0, 10, 10}
-		renderer.SetDrawColor(0, 255, 255, 255)
-		renderer.FillRect(&rect)
-		renderer.Present()
 	}
 
 
+	sdl.Quit()
 
-	sdl.Delay(2000)
+	return 0
+
 
 }
+
+func main() {
+	os.Exit(run())
+}
+
+
+
