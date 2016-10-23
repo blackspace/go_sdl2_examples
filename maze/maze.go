@@ -333,8 +333,6 @@ func (m *Maze)FindPath(x0,y0,x1,y1 int,path * PointStack)  {
 
 	path.Push(x0,y0)
 
-	log.Println(path)
-
 	if m.Get(x0,y0-1)!=nil&&m.IsOpen(x0,y0,UP)&&!path.HasPoint(x0,y0-1) {
 		m.FindPath(x0,y0-1,x1,y1,path)
 

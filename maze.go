@@ -8,7 +8,7 @@ import (
 
 
 func main() {
-	mm:=maze.BuildMaze(5)
+	mm:=maze.BuildMaze(10)
 	path:=maze.NewPointStack()
 
 
