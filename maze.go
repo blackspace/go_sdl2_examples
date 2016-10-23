@@ -17,13 +17,7 @@ func main() {
 
 	if ps.HasPoint(mm.Len()-1,0) {
 		log.Println("The maze has a path to out")
-
-
-
 		mm.FindPath(0,mm.Len()-1,mm.Len()-1,0,path)
-
-		log.Println(path)
-
 	} else {
 		log.Println("The maze has NOT a path to out")
 	}
