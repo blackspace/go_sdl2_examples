@@ -14,8 +14,8 @@ type Worm struct {
 	CurrentX,CurrentY int
 }
 
-func NewWorm() *Worm {
-	return &Worm{}
+func NewWorm(m *Maze) *Worm {
+	return &Worm{Maze:m}
 }
 
 func (w *Worm)UpCell() *Cell {
@@ -90,11 +90,7 @@ func (w *Worm)Right()  {
 	}
 }
 
-func (w *Worm)GetInMaze(m * Maze) {
-	w.Maze=m
-	x,y:=m.LeftBottom()
-	cell:=m.Get(x,y)
-	cell.EraseLeft()
+func (w *Worm)GetInMaze(x,y int) {
 	w.CurrentX=x
 	w.CurrentY=y
 }

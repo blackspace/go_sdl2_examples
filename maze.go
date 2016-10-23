@@ -3,12 +3,11 @@ package main
 import (
 	"go_sdl2_examples/maze"
 	"github.com/veandco/go-sdl2/sdl"
-	"log"
 )
 
 
 func main() {
-	mm:=maze.BuildMaze(10)
+	mm:=maze.BuildMaze(20)
 	path:=maze.NewPointStack()
 
 
@@ -16,10 +15,7 @@ func main() {
 	mm.GetOpenPointSet(0,mm.Len()-1,ps)
 
 	if ps.HasPoint(mm.Len()-1,0) {
-		log.Println("The maze has a path to out")
 		mm.FindPath(0,mm.Len()-1,mm.Len()-1,0,path)
-	} else {
-		log.Println("The maze has NOT a path to out")
 	}
 
 	w:=10

@@ -3,8 +3,6 @@ package maze
 import (
 	"errors"
 	"github.com/veandco/go-sdl2/sdl"
-	"log"
-	"strconv"
 	"time"
 	"math/rand"
 )
@@ -379,10 +377,8 @@ func BuildMaze(w int) * Maze {
 
 	RESTART:
 	x,y,_:=mm.GetAnyClosedCell()
-	ww := NewWorm()
-	ww.CurrentX=x
-	ww.CurrentY=y
-	ww.Maze=mm
+	ww := NewWorm(mm)
+	ww.GetInMaze(x,y)
 
 	for {
 		next_act_0 :=make([]int,0,4)
@@ -472,8 +468,6 @@ func BuildMaze(w int) * Maze {
 
 		if c:=mm.HasClosed();c==0 {
 			break
-		} else {
-			log.Println("There are "+strconv.Itoa(c)+" closed cell")
 		}
 	}
 
