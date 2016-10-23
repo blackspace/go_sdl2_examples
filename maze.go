@@ -3,11 +3,32 @@ package main
 import (
 	"go_sdl2_examples/maze"
 	"github.com/veandco/go-sdl2/sdl"
+	"log"
 )
 
 
 func main() {
-	w:=5
+	mm:=maze.BuildMaze(5)
+	path:=maze.NewPointStack()
+
+
+	ps:=maze.NewPointSet()
+	mm.GetOpenPointSet(0,mm.Len()-1,ps)
+
+	if ps.HasPoint(mm.Len()-1,0) {
+		log.Println("The maze has a path to out")
+
+
+
+		mm.FindPath(0,mm.Len()-1,mm.Len()-1,0,path)
+
+		log.Println(path)
+
+	} else {
+		log.Println("The maze has NOT a path to out")
+	}
+
+	w:=10
 	sdl.Init(sdl.INIT_EVERYTHING)
 
 	const W=800
@@ -24,20 +45,26 @@ func main() {
 		panic(err)
 	}
 
-
 	renderer, err := sdl.CreateRenderer(window, -1, sdl.RENDERER_ACCELERATED)
 	if err != nil {
 		panic(err)
 	}
 	defer renderer.Destroy()
-
-
-	mm:=maze.BuildMaze(30)
 	renderer.SetViewport(&sdl.Rect{10,10,int32(mm.Len()*w+1),int32(mm.Len()*w+1)})
 
 	renderer.SetDrawColor(0, 0, 0, 255)
 	renderer.Clear()
 	mm.Draw(renderer,w)
+
+
+	renderer.SetDrawColor(100, 100, 100, 255)
+
+	for i:=0;i<path.Count()-1;i++ {
+		x0,y0:=path.Index(i)
+		x1,y1:=path.Index(i+1)
+		renderer.DrawLine(x0*w+w/2,y0*w+w/2,x1*w+w/2,y1*w+w/2)
+	}
+
 	renderer.Present()
 
 	L:
