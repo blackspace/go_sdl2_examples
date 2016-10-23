@@ -3,7 +3,6 @@ package maze
 import (
 	"errors"
 	"github.com/veandco/go-sdl2/sdl"
-	"time"
 	"math/rand"
 )
 
@@ -40,7 +39,7 @@ func (m *Maze)Get(x,y int) *Cell{
 }
 
 
-func (m *Maze)GetAnyClosedCell() (x,y int,ok bool){
+func (m *Maze)GetFirstClosedCell() (x,y int,ok bool){
 	for y:=0;y<len(m.Cells);y++ {
 		for x:=0;x<len(m.Cells);x++ {
 			cell:=m.Get(x,y)
@@ -157,134 +156,141 @@ func (m *Maze)HasClosed() (result int) {
 func (m *Maze)WillMakeEmptyArea(x,y,a int) bool {
 	switch a {
 	case UP:
-		c0:=m.Get(x-1,y-1);	c1:=m.Get(x,y-1);	c4:=m.Get(x+1,y-1)
-		c2:=m.Get(x-1,y);	c3:=m.Get(x,y);		c5:=m.Get(x+1,y)
+		{
+			c0:=m.Get(x-1,y-1);	c1:=m.Get(x,y-1);	c4:=m.Get(x+1,y-1)
+			c2:=m.Get(x-1,y);	c3:=m.Get(x,y);		c5:=m.Get(x+1,y)
 
-		var may_left_empty,may_right_empty bool
+			var may_left_empty,may_right_empty bool
 
-		if c0!=nil && c1!=nil && c2!=nil && c3!=nil {
-			left :=NewMaze(2)
-			left.Cells[0][0]=*c0; left.Cells[1][0]=*c1
-			left.Cells[0][1]=*c2; left.Cells[1][1]=*c3
+			if c0!=nil && c1!=nil && c2!=nil && c3!=nil {
+				left :=NewMaze(2)
+				left.Cells[0][0]=*c0; left.Cells[1][0]=*c1
+				left.Cells[0][1]=*c2; left.Cells[1][1]=*c3
 
-			if left.IsOpen(0,0,DOWN) && left.IsOpen(0,0,RIGHT) && left.IsOpen(0,1,RIGHT) {
-				may_left_empty=true
-			}
-		}
-
-		if c4!=nil && c5!=nil && c1!=nil && c3!=nil {
-			right :=NewMaze(2)
-			right.Cells[0][0]=*c1; right.Cells[1][0]=*c4
-			right.Cells[0][1]=*c3; right.Cells[1][1]=*c5
-
-			if right.IsOpen(0,0,RIGHT) && right.IsOpen(0,1,RIGHT) && right.IsOpen(1,0,DOWN) {
-				may_right_empty=true
+				if left.IsOpen(0,0,DOWN) && left.IsOpen(0,0,RIGHT) && left.IsOpen(0,1,RIGHT) {
+					may_left_empty=true
+				}
 			}
 
-		}
+			if c4!=nil && c5!=nil && c1!=nil && c3!=nil {
+				right :=NewMaze(2)
+				right.Cells[0][0]=*c1; right.Cells[1][0]=*c4
+				right.Cells[0][1]=*c3; right.Cells[1][1]=*c5
 
-		if may_left_empty || may_right_empty {
-			return true
-		} else {
-			return  false
+				if right.IsOpen(0,0,RIGHT) && right.IsOpen(0,1,RIGHT) && right.IsOpen(1,0,DOWN) {
+					may_right_empty=true
+				}
+
+			}
+
+			if may_left_empty || may_right_empty {
+				return true
+			} else {
+				return  false
+			}
 		}
 	case DOWN:
-		c0:=m.Get(x-1,y);	c1:=m.Get(x,y);		c4:=m.Get(x+1,y)
-		c2:=m.Get(x-1,y+1);	c3:=m.Get(x,y+1);	c5:=m.Get(x+1,y+1)
+		{
+			c0:=m.Get(x-1,y);	c1:=m.Get(x,y);		c4:=m.Get(x+1,y)
+			c2:=m.Get(x-1,y+1);	c3:=m.Get(x,y+1);	c5:=m.Get(x+1,y+1)
 
-		var may_left_empty,may_right_empty bool
+			var may_left_empty,may_right_empty bool
 
-		if c0!=nil && c1!=nil && c2!=nil && c3!=nil {
-			left :=NewMaze(2)
-			left.Cells[0][0]=*c0; left.Cells[1][0]=*c1
-			left.Cells[0][1]=*c2; left.Cells[1][1]=*c3
+			if c0!=nil && c1!=nil && c2!=nil && c3!=nil {
+				left :=NewMaze(2)
+				left.Cells[0][0]=*c0; left.Cells[1][0]=*c1
+				left.Cells[0][1]=*c2; left.Cells[1][1]=*c3
 
-			if left.IsOpen(0,0,DOWN) && left.IsOpen(0,0,RIGHT) && left.IsOpen(0,1,RIGHT) {
-				may_left_empty=true
+				if left.IsOpen(0,0,DOWN) && left.IsOpen(0,0,RIGHT) && left.IsOpen(0,1,RIGHT) {
+					may_left_empty=true
+				}
 			}
-		}
 
-		if c4!=nil && c5!=nil && c1!=nil && c3!=nil {
-			right :=NewMaze(2)
-			right.Cells[0][0]=*c1; right.Cells[1][0]=*c4
-			right.Cells[0][1]=*c3; right.Cells[1][1]=*c5
+			if c4!=nil && c5!=nil && c1!=nil && c3!=nil {
+				right :=NewMaze(2)
+				right.Cells[0][0]=*c1; right.Cells[1][0]=*c4
+				right.Cells[0][1]=*c3; right.Cells[1][1]=*c5
 
-			if right.IsOpen(0,0,RIGHT) && right.IsOpen(0,1,RIGHT) && right.IsOpen(1,0,DOWN) {
-				may_right_empty=true
+				if right.IsOpen(0,0,RIGHT) && right.IsOpen(0,1,RIGHT) && right.IsOpen(1,0,DOWN) {
+					may_right_empty=true
+				}
 			}
-		}
 
-		if may_left_empty || may_right_empty {
-			return true
-		} else {
-			return false
+			if may_left_empty || may_right_empty {
+				return true
+			} else {
+				return false
+			}
 		}
 	case LEFT:
-		c0:=m.Get(x-1,y-1);	c1:=m.Get(x,y-1);
-		c2:=m.Get(x-1,y);	c3:=m.Get(x,y);
-		c4:=m.Get(x-1,y+1);	c5:=m.Get(x,y+1)
+		{
+			c0:=m.Get(x-1,y-1);	c1:=m.Get(x,y-1);
+			c2:=m.Get(x-1,y);	c3:=m.Get(x,y);
+			c4:=m.Get(x-1,y+1);	c5:=m.Get(x,y+1)
 
-		var may_up_empty,may_down_empty bool
+			var may_up_empty,may_down_empty bool
 
-		if c0!=nil && c1!=nil && c2!=nil && c3!=nil {
-			up :=NewMaze(2)
-			up.Cells[0][0]=*c0; up.Cells[1][0]=*c1
-			up.Cells[0][1]=*c2; up.Cells[1][1]=*c3
+			if c0!=nil && c1!=nil && c2!=nil && c3!=nil {
+				up :=NewMaze(2)
+				up.Cells[0][0]=*c0; up.Cells[1][0]=*c1
+				up.Cells[0][1]=*c2; up.Cells[1][1]=*c3
 
 
-			if up.IsOpen(0,0,RIGHT) && up.IsOpen(0,0,DOWN) && up.IsOpen(1,0,DOWN) {
-				may_up_empty=true
+				if up.IsOpen(0,0,RIGHT) && up.IsOpen(0,0,DOWN) && up.IsOpen(1,0,DOWN) {
+					may_up_empty=true
+				}
+			}
+
+			if c4!=nil && c5!=nil && c2!=nil && c3!=nil {
+				down :=NewMaze(2)
+				down.Cells[0][0]=*c2; down.Cells[1][0]=*c3
+				down.Cells[0][1]=*c4; down.Cells[1][1]=*c5
+
+
+				if down.IsOpen(0,0,DOWN) && down.IsOpen(0,1,RIGHT) && down.IsOpen(1,0,DOWN) {
+					may_down_empty=true
+				}
+			}
+
+			if may_up_empty || may_down_empty {
+				return true
+			} else {
+				return false
 			}
 		}
-
-		if c4!=nil && c5!=nil && c2!=nil && c3!=nil {
-			down :=NewMaze(2)
-			down.Cells[0][0]=*c2; down.Cells[1][0]=*c3
-			down.Cells[0][1]=*c4; down.Cells[1][1]=*c5
-
-
-			if down.IsOpen(0,0,DOWN) && down.IsOpen(0,1,RIGHT) && down.IsOpen(1,0,DOWN) {
-				may_down_empty=true
-			}
-		}
-
-		if may_up_empty || may_down_empty {
-			return true
-		} else {
-			return false
-		}
-
 	case RIGHT:
-		c0:=m.Get(x,y-1);	c1:=m.Get(x+1,y-1);
-		c2:=m.Get(x,y);		c3:=m.Get(x+1,y);
-		c4:=m.Get(x,y+1);	c5:=m.Get(x+1,y+1)
+		{
+			c0:=m.Get(x,y-1);	c1:=m.Get(x+1,y-1);
+			c2:=m.Get(x,y);		c3:=m.Get(x+1,y);
+			c4:=m.Get(x,y+1);	c5:=m.Get(x+1,y+1)
 
-		var may_up_empty,may_down_empty bool
+			var may_up_empty,may_down_empty bool
 
-		if c0!=nil && c1!=nil && c2!=nil && c3!=nil {
-			up :=NewMaze(2)
-			up.Cells[0][0]=*c0; up.Cells[1][0]=*c1
-			up.Cells[0][1]=*c2; up.Cells[1][1]=*c3
+			if c0!=nil && c1!=nil && c2!=nil && c3!=nil {
+				up :=NewMaze(2)
+				up.Cells[0][0]=*c0; up.Cells[1][0]=*c1
+				up.Cells[0][1]=*c2; up.Cells[1][1]=*c3
 
-			if up.IsOpen(0,0,RIGHT) && up.IsOpen(0,0,DOWN) && up.IsOpen(1,0,DOWN) {
-				may_up_empty=true
+				if up.IsOpen(0,0,RIGHT) && up.IsOpen(0,0,DOWN) && up.IsOpen(1,0,DOWN) {
+					may_up_empty=true
+				}
 			}
-		}
 
-		if c4!=nil && c5!=nil && c2!=nil && c3!=nil {
-			down :=NewMaze(2)
-			down.Cells[0][0]=*c2; down.Cells[1][0]=*c3
-			down.Cells[0][1]=*c4; down.Cells[1][1]=*c5
+			if c4!=nil && c5!=nil && c2!=nil && c3!=nil {
+				down :=NewMaze(2)
+				down.Cells[0][0]=*c2; down.Cells[1][0]=*c3
+				down.Cells[0][1]=*c4; down.Cells[1][1]=*c5
 
-			if down.IsOpen(0,0,DOWN) && down.IsOpen(0,1,RIGHT) && down.IsOpen(1,0,DOWN) {
-				may_down_empty=true
+				if down.IsOpen(0,0,DOWN) && down.IsOpen(0,1,RIGHT) && down.IsOpen(1,0,DOWN) {
+					may_down_empty=true
+				}
 			}
-		}
 
-		if may_up_empty || may_down_empty {
-			return true
-		} else {
-			return false
+			if may_up_empty || may_down_empty {
+				return true
+			} else {
+				return false
+			}
 		}
 	}
 
@@ -293,8 +299,6 @@ func (m *Maze)WillMakeEmptyArea(x,y,a int) bool {
 
 func (m *Maze)Draw(r *sdl.Renderer,w int) {
 	n:=m.Len()
-
-	r.SetDrawColor(255,255,255,255)
 
 	for y:=0;y<n;y++ {
 		for x:=0;x<n;x++ {
@@ -369,90 +373,72 @@ func (m *Maze)FindPath(x0,y0,x1,y1 int,path * PointStack)  {
 	return
 }
 
-func BuildMaze(w int) * Maze {
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-
+func BuildMaze(w int,r int) * Maze {
+	rand_generator := rand.New(rand.NewSource(int64(r)))
 	mm :=NewMaze(w)
 
 
 	RESTART:
-	x,y,_:=mm.GetAnyClosedCell()
+	x,y,ok:=mm.GetFirstClosedCell()
+
+	if !ok {
+		return mm
+	}
+
 	ww := NewWorm(mm)
 	ww.GetInMaze(x,y)
 
 	for {
 		next_act_0 :=make([]int,0,4)
-		next_act_1 :=make([]int,0,4)
 		next_act_final :=make([]int,0,4)
-		if ww.UpCell()!=nil && !mm.IsOpen(ww.CurrentX,ww.CurrentY,UP) {
+		if ww.UpCell()!=nil && !mm.IsOpen(ww.current_x,ww.current_y,UP) {
 			next_act_0 =append(next_act_0,UP)
 		}
 
-		if ww.DownCell()!=nil && !mm.IsOpen(ww.CurrentX,ww.CurrentY,DOWN) {
+		if ww.DownCell()!=nil && !mm.IsOpen(ww.current_x,ww.current_y,DOWN) {
 			next_act_0 =append(next_act_0,DOWN)
 		}
 
-		if ww.LeftCell()!=nil && !mm.IsOpen(ww.CurrentX,ww.CurrentY,LEFT)  {
+		if ww.LeftCell()!=nil && !mm.IsOpen(ww.current_x,ww.current_y,LEFT)  {
 			next_act_0 =append(next_act_0,LEFT)
 		}
 
-		if ww.RightCell()!=nil && !mm.IsOpen(ww.CurrentX,ww.CurrentY,RIGHT) {
+		if ww.RightCell()!=nil && !mm.IsOpen(ww.current_x,ww.current_y,RIGHT) {
 			next_act_0 =append(next_act_0,RIGHT)
 		}
 
 		for _,a:=range next_act_0 {
 			switch a {
 			case UP:
-				if !mm.WillMakeEmptyArea(ww.CurrentX,ww.CurrentY,UP) {
-					next_act_1=append(next_act_1,UP)
+
+				ps := NewPointSet()
+				mm.GetOpenPointSet(ww.current_x, ww.current_y, ps)
+				if !ps.HasPoint(ww.current_x, ww.current_y - 1) {
+					next_act_final = append(next_act_final, UP)
 				}
 			case DOWN:
-				if !mm.WillMakeEmptyArea(ww.CurrentX,ww.CurrentY,DOWN) {
-					next_act_1=append(next_act_1,DOWN)
+				ps := NewPointSet()
+				mm.GetOpenPointSet(ww.current_x, ww.current_y, ps)
+				if !ps.HasPoint(ww.current_x, ww.current_y + 1) {
+					next_act_final = append(next_act_final, DOWN)
 				}
 			case LEFT:
-				if !mm.WillMakeEmptyArea(ww.CurrentX,ww.CurrentY,LEFT) {
-					next_act_1=append(next_act_1,LEFT)
+				ps := NewPointSet()
+				mm.GetOpenPointSet(ww.current_x, ww.current_y, ps)
+				if !ps.HasPoint(ww.current_x - 1, ww.current_y) {
+					next_act_final = append(next_act_final, LEFT)
 				}
 			case RIGHT:
-				if !mm.WillMakeEmptyArea(ww.CurrentX,ww.CurrentY,RIGHT) {
-					next_act_1=append(next_act_1,RIGHT)
-				}
-			}
-		}
-
-
-		for _,a:=range next_act_1 {
-			switch a {
-			case UP:
-				ps:=NewPointSet()
-				mm.GetOpenPointSet(ww.CurrentX,ww.CurrentY,ps)
-				if !ps.HasPoint(ww.CurrentX,ww.CurrentY-1)  {
-					next_act_final =append(next_act_final,UP)
-				}
-			case DOWN:
-				ps:=NewPointSet()
-				mm.GetOpenPointSet(ww.CurrentX,ww.CurrentY,ps)
-				if !ps.HasPoint(ww.CurrentX,ww.CurrentY+1){
-					next_act_final =append(next_act_final,DOWN)
-				}
-			case LEFT:
-				ps:=NewPointSet()
-				mm.GetOpenPointSet(ww.CurrentX,ww.CurrentY,ps)
-				if !ps.HasPoint(ww.CurrentX-1,ww.CurrentY) {
-					next_act_final =append(next_act_final,LEFT)
-				}
-			case RIGHT:
-				ps:=NewPointSet()
-				mm.GetOpenPointSet(ww.CurrentX,ww.CurrentY,ps)
-				if !ps.HasPoint(ww.CurrentX+1,ww.CurrentY) {
-					next_act_final =append(next_act_final,RIGHT)
+				ps := NewPointSet()
+				mm.GetOpenPointSet(ww.current_x, ww.current_y, ps)
+				if !ps.HasPoint(ww.current_x + 1, ww.current_y) {
+					next_act_final = append(next_act_final, RIGHT)
 				}
 			}
 		}
 
 		if len(next_act_final)!=0 {
-			switch next_act_final[r.Intn(len(next_act_final))]{
+			switch next_act_final[rand_generator.Intn(len(next_act_final))]{
 			case UP:
 				ww.Up()
 			case DOWN:
@@ -464,10 +450,6 @@ func BuildMaze(w int) * Maze {
 			}
 		} else {
 			goto RESTART
-		}
-
-		if c:=mm.HasClosed();c==0 {
-			break
 		}
 	}
 

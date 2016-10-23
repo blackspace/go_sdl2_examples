@@ -7,22 +7,10 @@ import (
 
 
 func main() {
-	mm:=maze.BuildMaze(20)
-	path:=maze.NewPointStack()
-
-
-	ps:=maze.NewPointSet()
-	mm.GetOpenPointSet(0,mm.Len()-1,ps)
-
-	if ps.HasPoint(mm.Len()-1,0) {
-		mm.FindPath(0,mm.Len()-1,mm.Len()-1,0,path)
-	}
-
-	w:=10
 	sdl.Init(sdl.INIT_EVERYTHING)
 
-	const W=800
-	const H=600
+	const W=1000
+	const H=800
 
 	window, err := sdl.CreateWindow("test", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
 		W, H, sdl.WINDOW_SHOWN)
@@ -40,14 +28,19 @@ func main() {
 		panic(err)
 	}
 	defer renderer.Destroy()
-	renderer.SetViewport(&sdl.Rect{10,10,int32(mm.Len()*w+1),int32(mm.Len()*w+1)})
 
+	w:=10
+	n:=30
 	renderer.SetDrawColor(0, 0, 0, 255)
 	renderer.Clear()
+
+	mm:=maze.BuildMaze(n,0)
+	path:=maze.NewPointStack()
+	mm.FindPath(0,n-1,n-1,0,path)
+
+	renderer.SetDrawColor(200,200,200,255)
 	mm.Draw(renderer,w)
-
-
-	renderer.SetDrawColor(100, 100, 100, 255)
+	renderer.SetDrawColor(150, 10, 10, 255)
 
 	for i:=0;i<path.Count()-1;i++ {
 		x0,y0:=path.Index(i)
